@@ -4,5 +4,6 @@ def make_item(title, artists, lyric, song_metadata):
         'artists': artists,
         'lyric': lyric,
         'metadata': song_metadata,
+        'snippet_lyric': [],
         'annotations': []
     }

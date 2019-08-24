@@ -20,13 +20,12 @@ class GeniusSpider(scrapy.Spider):
         artists = set(response.css('span.metadata_unit-info a::text').getall())
         lyric = response.css('div.lyrics p::text').getall()
         annotations_ids = response.css('a::attr(annotation-fragment)').getall()
-        item = output.make_item(title, artists, lyric, song_metadata)
 
+        item = output.make_item(title, artists, lyric, song_metadata)
         if annotations_ids:
             return self.get_annotations(response, annotations_ids, item)
         else:
             return item
-
 
     def get_annotations(self, response, annotations_ids, item):
         for annotation_id in annotations_ids:

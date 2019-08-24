@@ -16,21 +16,24 @@ class GeniusSpider(scrapy.Spider):
 
     def parse_2(self, response):
         song_metadata = response.css("div.rich_text_formatting p::text").getall()
+        artists = set(response.css("span.metadata_unit-info a::text").getall())
+        lyrics = response.css("div.lyrics p::text").getall()
         annotations = response.css("a::attr(annotation-fragment)").getall()
+
+        item = {'artists': artists, 'lyrics': lyrics, 'metadata': song_metadata}
         for url in annotations:
             link = 'https://genius.com/' + url
-            yield scrapy.Request(url=link, callback=self.parse_3)
+            yield scrapy.Request(url=link, callback=self.parse_3, meta={'item': item})
+
 
 
     def parse_3(self, response):
-        page = response.url.split("/")[-1]
-        filename = 'quotes-%s.html' % page
         snippet_lyric = response.css("meta[property='og:title']::attr(content)").getall()
-        annotation = response.css("meta[property='og:description']::attr(content)").getall()
-        print('Hey ------')
-        print(snippet_lyric)
-        print('\n\n ----- \n\n')
-        print(annotation)
-        with open(filename, 'wb') as f:
-            f.write(response.body)
-        self.log('Saved file %s' % filename)
+        annotations = response.css("meta[property='og:description']::attr(content)").getall()
+        item = response.meta['item']
+        item['snippet_lyric'] = snippet_lyric
+        item['annotations']= annotations
+
+        return item
+
+

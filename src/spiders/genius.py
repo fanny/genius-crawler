@@ -1,5 +1,6 @@
-import scrapy
 from urllib.parse import urljoin
+from ..utils import output
+import scrapy
 
 class GeniusSpider(scrapy.Spider):
     name = "genius"
@@ -19,28 +20,22 @@ class GeniusSpider(scrapy.Spider):
         artists = set(response.css('span.metadata_unit-info a::text').getall())
         lyric = response.css('div.lyrics p::text').getall()
         annotations_ids = response.css('a::attr(annotation-fragment)').getall()
-        item = {
-            'title': title,
-            'artists': artists,
-            'lyric': lyric,
-            'metadata': song_metadata,
-            'snippet_lyric': [],
-            'annotations': []
-        }
+        item = output.make_item(title, artists, lyric, song_metadata)
 
         if annotations_ids:
-            for annotation_id in annotations_ids:
-                url = urljoin(response.url, annotation_id)
-                yield scrapy.Request(
-                    url=url,
-                    callback=self.parse_annotation_page,
-                    meta={'item': item}
-                )
+            return self.get_annotations(response, annotations_ids, item)
         else:
-            yield item
+            return item
 
 
-
+    def get_annotations(self, response, annotations_ids, item):
+        for annotation_id in annotations_ids:
+            url = urljoin(response.url, annotation_id)
+            yield scrapy.Request(
+                url=url,
+                callback=self.parse_annotation_page,
+                meta={'item': item}
+            )
 
     def parse_annotation_page(self, response):
         snippet_lyric = response.css("meta[property='og:title']::attr(content)").getall()
@@ -49,6 +44,6 @@ class GeniusSpider(scrapy.Spider):
         item['snippet_lyric'] = snippet_lyric
         item['annotations']= annotations
 
-        yield item
+        return item
 
 

@@ -6,7 +6,7 @@ Crawler for extract genius metadata and annotations of [**Parcels**](https://gen
 
 ## Prerequisites
 
-You need to have `Python 3` in your local machine, so you can run:
+You need to have `Python 3`, or create a [virtualenv](https://towardsdatascience.com/all-you-need-to-know-about-python-virtual-environments-9b4aae690f97), so you can run:
 
 `pip install -r requirements.txt`
 

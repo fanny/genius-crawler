@@ -2,7 +2,7 @@
 
 Crawler for extract genius metadata and annotations of [**Parcels**](https://genius.com/artists/Parcels) top songs.
 
-![](https://images.sk-static.com/images/media/profile_images/artists/8653309/huge_avatar)
+![](https://ksassets.timeincuk.net/wp/uploads/sites/55/2018/10/PARCELS_MAY2018_3_image_AntoineHenault-920x584.jpg)
 
 ## Prerequisites
 
